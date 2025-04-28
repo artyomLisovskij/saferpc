@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+RUN npm install -g hardhat
+WORKDIR /usr/src/app
+COPY package.json hardhat.config.js ./
+RUN npm install
+
+EXPOSE 8545
+
+CMD ["npm","run","node"]

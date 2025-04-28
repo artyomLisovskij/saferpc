@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.sqlite3
+.coverage
+htmlcov/
+
+# Локальные файлы
+.env
+.env.local
+*.log
+media/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore 

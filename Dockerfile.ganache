@@ -1,0 +1,9 @@
+FROM node:latest
+# OLD
+RUN npm install -g ganache@latest
+
+EXPOSE 8545
+
+WORKDIR /usr/src/app
+
+CMD ["ganache", "--host", "0.0.0.0", "--port", "8545", "--fork", "${ETHEREUM_RPC_URL}", "--chain.networkId", "${CHAIN_ID}","--chain.chainId", "${CHAIN_ID}"]

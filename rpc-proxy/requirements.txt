@@ -1,0 +1,7 @@
+django-ninja==1.0.1
+uvicorn==0.27.0
+web3==7.10.0
+requests==2.31.0
+psycopg2-binary==2.9.9
+hexbytes
+whitenoise==6.6.0

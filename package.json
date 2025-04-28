@@ -1,0 +1,11 @@
+{
+    "name": "hardhat-fork",
+    "version": "1.0.0",
+    "devDependencies": {
+      "hardhat": "^2.16.0",
+      "@nomiclabs/hardhat-ethers": "^2.2.0"
+    },
+    "scripts": {
+      "node": "hardhat node --hostname 0.0.0.0 --fork ${ETHEREUM_RPC_URL} --port 8545"
+    }
+}

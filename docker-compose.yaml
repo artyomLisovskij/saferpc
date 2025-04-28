@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rpc-proxy:
+    build:
+      context: rpc-proxy
+      dockerfile: Dockerfile
+    volumes:
+      - ./rpc-proxy:/app
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      hardhat-network:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  # ganache:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.ganache
+
+  hardhat-network:
+    build:
+      context: .
+      dockerfile: Dockerfile.hardhatnetwork
+
+  telegram-bot:
+    build:
+      context: bot
+      dockerfile: Dockerfile
+    volumes:
+      - ./bot:/app
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rpc-proxy:
+        condition: service_started
+

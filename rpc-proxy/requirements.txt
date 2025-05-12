@@ -5,3 +5,6 @@ requests==2.31.0
 psycopg2-binary==2.9.9
 hexbytes
 whitenoise==6.6.0
+openai
+httpx[socks]
+evmdasm

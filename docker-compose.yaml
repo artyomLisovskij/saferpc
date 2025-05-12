@@ -38,6 +38,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.hardhatnetwork
+    volumes:
+      - ./package.json:/usr/src/app/package.json
+      - ./hardhat.config.js:/usr/src/app/hardhat.config.js
+    env_file:
+      - .env
 
   telegram-bot:
     build:
@@ -53,3 +58,12 @@ services:
       rpc-proxy:
         condition: service_started
 
+  gigahorse:
+    build:
+      context: analyzer
+      dockerfile: Dockerfile
+    volumes:
+      - ./analyzer:/app
+      - ./analyzer/visualizeout.py:/opt/gigahorse/gigahorse-toolchain/clients/visualizeout.py
+    ports:
+      - "3000:8000"

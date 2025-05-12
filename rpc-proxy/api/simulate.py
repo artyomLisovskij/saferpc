@@ -39,11 +39,11 @@ def simulate_transaction(signed_raw):
     # print(topic_map)
     from_address = Account.recover_transaction(signed_raw)
     print(from_address)
-    rpc_w3 = Web3(Web3.HTTPProvider(os.environ.get('ETHEREUM_RPC_URL')))
+    rpc_w3 = Web3(Web3.HTTPProvider(os.environ.get('RPC_URL')))
     params = [{
         "forking": {
-            "jsonRpcUrl": os.environ.get('ETHEREUM_RPC_URL'),
-            "blockNumber": rpc_w3.eth.get_block_number()
+            "jsonRpcUrl": os.environ.get('RPC_URL'),
+            "blockNumber": rpc_w3.eth.get_block_number() - 10
         }
     }]
     w3.manager.request_blocking("hardhat_reset", params)
@@ -104,8 +104,8 @@ def simulate_transaction(signed_raw):
         w3.provider.make_request("evm_revert", [snapshot_id])
         params = [{
             "forking": {
-                "jsonRpcUrl": os.environ.get('ETHEREUM_RPC_URL'),
-                "blockNumber": rpc_w3.eth.get_block_number()
+                "jsonRpcUrl": os.environ.get('RPC_URL'),
+                "blockNumber": rpc_w3.eth.get_block_number() - 10
             }
         }]
         w3.manager.request_blocking("hardhat_reset", params)

@@ -1,0 +1,25 @@
+STATIC ANALYSER RESPONSE:
+function 0x1158(0x1158arg0x0, 0x1158arg0x1, 0x1158arg0x2, 0x1158arg0x3) private { Begin block 0x1158 prev=[], succ=[0x1167, 0x119d] v1159(0x1) = CONST v115b(0x1) = CONST v115d(0xa0) = CONST v115f(0x10000000000000000000000000000000000000000) = SHL v115d(0xa0), v115b(0x1) v1160(0xffffffffffffffffffffffffffffffffffffffff) = SUB v115f(0x10000000000000000000000000000000000000000), v1159(0x1) v1162 = AND v1158arg2, v1160(0xffffffffffffffffffffffffffffffffffffffff) v1163(0x119d) = CONST JUMPI v1163(0x119d), v1162 Begin block 0x1167 prev=[0x1158], succ=[] v1167(0x40) = CONST v1169 = MLOAD v1167(0x40) v116a(0x461bcd) = CONST v116e(0xe5) = CONST v1170(0x8c379a000000000000000000000000000000000000000000000000000000000) = SHL v116e(0xe5), v116a(0x461bcd) MSTORE v1169, v1170(0x8c379a000000000000000000000000000000000000000000000000000000000) v1173(0x4) = CONST v1175 = ADD v1173(0x4), v1169 v1178(0x20) = CONST v117a = ADD v1178(0x20), v1175 v117d(0x20) = SUB v117a, v1175 MSTORE v1175, v117d(0x20) v1180(0x24) = CONST MSTORE v117a, v1180(0x24) v1184(0x20) = CONST v1186 = ADD v1184(0x20), v117a v1188(0x1a75) = CONST v118b(0x24) = CONST CODECOPY v1186, v1188(0x1a75), v118b(0x24) v118f(0x40) = CONST v1191 = ADD v118f(0x40), v1186 v1195(0x40) = CONST v1197 = MLOAD v1195(0x40) v119a(0x84) = SUB v1191, v1197 REVERT v1197, v119a(0x84) Begin block 0x119d prev=[0x1158], succ=[0x11ac, 0x11e2] v119e(0x1) = CONST v11a0(0x1) = CONST v11a2(0xa0) = CONST v11a4(0x10000000000000000000000000000000000000000) = SHL v11a2(0xa0), v11a0(0x1) v11a5(0xffffffffffffffffffffffffffffffffffffffff) = SUB v11a4(0x10000000000000000000000000000000000000000), v119e(0x1) v11a7 = AND v1158arg1, v11a5(0xffffffffffffffffffffffffffffffffffffffff) v11a8(0x11e2) = CONST JUMPI v11a8(0x11e2), v11a7 Begin block 0x11ac prev=[0x119d], succ=[] v11ac(0x40) = CONST v11ae = MLOAD v11ac(0x40) v11af(0x461bcd) = CONST v11b3(0xe5) = CONST v11b5(0x8c379a000000000000000000000000000000000000000000000000000000000) = SHL v11b3(0xe5), v11af(0x461bcd) MSTORE v11ae, v11b5(0x8c379a000000000000000000000000000000000000000000000000000000000) v11b8(0x4) = CONST v11ba = ADD v11b8(0x4), v11ae v11bd(0x20) = CONST v11bf = ADD v11bd(0x20), v11ba v11c2(0x20) = SUB v11bf, v11ba MSTORE v11ba, v11c2(0x20) v11c5(0x22) = CONST MSTORE v11bf, v11c5(0x22) v11c9(0x20) = CONST v11cb = ADD v11c9(0x20), v11bf v11cd(0x1c1e) = CONST v11d0(0x22) = CONST CODECOPY v11cb, v11cd(0x1c1e), v11d0(0x22) v11d4(0x40) = CONST v11d6 = ADD v11d4(0x40), v11cb v11da(0x40) = CONST v11dc = MLOAD v11da(0x40) v11df(0x84) = SUB v11d6, v11dc REVERT v11dc, v11df(0x84) Begin block 0x11e2 prev=[0x119d], succ=[] v11e3(0x1) = CONST v11e5(0x1) = CONST v11e7(0xa0) = CONST v11e9(0x10000000000000000000000000000000000000000) = SHL v11e7(0xa0), v11e5(0x1) v11ea(0xffffffffffffffffffffffffffffffffffffffff) = SUB v11e9(0x10000000000000000000000000000000000000000), v11e3(0x1) v11ed = AND v1158arg2, v11ea(0xffffffffffffffffffffffffffffffffffffffff) v11ee(0x0) = CONST MSTORE v11ee(0x0), v11ed v11f3(0x2) = CONST v11f5(0x20) = CONST MSTORE v11f5(0x20), v11f3(0x2) v11fa(0x40) = CONST v11fe = SHA3 v11ee(0x0), v11fa(0x40) v1201 = AND v1158arg1, v11ea(0xffffffffffffffffffffffffffffffffffffffff) MSTORE v11ee(0x0), v1201 MSTORE v11f5(0x20), v11fe v120b = SHA3 v11ee(0x0), v11fa(0x40) SSTORE v120b, v1158arg0 v1210 = MLOAD v11fa(0x40) MSTORE v1210, v1158arg0 v1215 = MLOAD v11fa(0x40) v1216(0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925) = CONST v123a(0x0) = SUB v1210, v1215 v123d(0x20) = ADD v11f5(0x20), v123a(0x0) LOG3 v1215, v123d(0x20), v1216(0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925), v11ed, v1201 RETURNPRIVATE v1158arg3}
+
+LLM REPRODUCED CODE:
+function 0x1158(uint256 0x1158arg0x0, address 0x1158arg0x1, address 0x1158arg0x2, uint256 0x1158arg0x3) private returns (bool) { 
+    if (0x1158arg0x2 == address(0)) revert("BEP20: approve from the zero address"); 
+    if (0x1158arg0x1 == address(0)) revert("BEP20: approve to the zero address"); 
+    // storage slot 2: mapping(address => mapping(address => uint256)) _allowances 
+    _allowances[0x1158arg0x2][0x1158arg0x1] = 0x1158arg0x0; 
+    emit Approval(0x1158arg0x2, 0x1158arg0x1, 0x1158arg0x0); 
+    return true; 
+}
+
+SOURCE CODE:
+function _approve(
+    address owner,
+    address spender,
+    uint256 amount
+) internal {
+    require(owner != address(0), 'BEP20: approve from the zero address');
+    require(spender != address(0), 'BEP20: approve to the zero address');
+
+    _allowances[owner][spender] = amount;
+    emit Approval(owner, spender, amount);
+}

@@ -4,6 +4,7 @@ import json
 from .models import PendingTransaction, User, UserAdress
 import os
 from .simulate import simulate_transaction
+from .analyze import *
 from typing import Any
 from web3.auto import Web3
 
@@ -88,7 +89,19 @@ def process_rpc(request):
                 continue
             else:
                 result, tx_hash, from_address = simulate_transaction(req.get("params")[0])
-            address = UserAdress.objects.get(address=from_address)
+                
+            address = UserAdress.objects.filter(address=from_address).first()
+            if not address:
+                error_msg = f"No such user's address: {str(e)}"
+                responses.append({
+                    "id": req.get("id"),
+                    "jsonrpc": req.get("jsonrpc", "2.0"),
+                    "error": {
+                        "code": -32603,
+                        "message": error_msg
+                    }
+                })
+                continue
             pending_transaction = PendingTransaction.objects.filter(transaction_id=tx_hash).first()
             if not pending_transaction:
                 transaction_object = PendingTransaction.objects.create(
@@ -98,6 +111,15 @@ def process_rpc(request):
                     raw_transaction=req.get("params")[0],
                     transaction_id=tx_hash
                 )
+                # !!
+                # ATTENTION: Запускайте на свой страх и риск, жрёт очень много времени и денег с OPEN_AI аккаунта!!
+                # !!
+                # analyze_result, schemas, static_analysis_output, trace = analyze_transaction(req.get("params")[0], from_address, result["to"])
+                # transaction_object.analyze_result = analyze_result
+                # transaction_object.schemas = json.dumps(schemas)
+                # transaction_object.static_analysis_output = json.dumps(static_analysis_output)
+                # transaction_object.trace = json.dumps(trace)
+                # transaction_object.save()
                 requests.post(
                     "http://telegram-bot:8000/notify-transaction",
                     json={
@@ -116,7 +138,7 @@ def process_rpc(request):
             # Проксируем запрос к Ethereum ноде в асинхронном режиме
             try:
                 ethereum_response = requests.post(
-                    os.environ.get('ETHEREUM_RPC_URL'),
+                    os.environ.get('RPC_URL'),
                     json=req,
                     headers={"Content-Type": "application/json"}
                 )
@@ -162,6 +184,24 @@ def new_user(request, payload: NewUserInput):
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+@api.get("/resimulate_latest_transaction")
+def resimulate_latest_transaction(request):
+    try:
+        latest_transaction = PendingTransaction.objects.filter(pending=True).order_by('-id').first()
+        if latest_transaction:
+            response, schemas, static_analysis_output, _ = analyze_transaction(latest_transaction.raw_transaction, latest_transaction.address.address, latest_transaction.data["to"], trace=latest_transaction.trace, pending_transaction=latest_transaction)
+            latest_transaction.analyze_result = response
+            latest_transaction.schemas = json.dumps(schemas)
+            latest_transaction.static_analysis_output = json.dumps(static_analysis_output)
+            latest_transaction.save()
+            return {"status": "success", "response": response}
+        return {"status": "error", "message": "No pending transactions"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 
 @api.post("/get_user_id", response=NewUserOutput)
 def get_user_id(request, payload: NewUserInput):
@@ -277,16 +317,15 @@ def confirm_transaction(request, payload: ConfirmTransactionInput):
         transaction.save()
         # send web3 raw transaction
         requests.post(
-            os.environ.get('ETHEREUM_RPC_URL'),
+            os.environ.get('RPC_URL'),
             json=transaction.raw_data,
             headers={"Content-Type": "application/json"}
         )
-        rpc_w3 = Web3(Web3.HTTPProvider(os.environ.get('ETHEREUM_RPC_URL')))
-        block_number = rpc_w3.eth.get_block_number()
+        rpc_w3 = Web3(Web3.HTTPProvider(os.environ.get('RPC_URL')))
         params = [{
             "forking": {
-                "jsonRpcUrl": os.environ.get('ETHEREUM_RPC_URL'),
-                "blockNumber": block_number
+                "jsonRpcUrl": os.environ.get('RPC_URL'),
+                "blockNumber": rpc_w3.eth.get_block_number() - 10
             }
         }]
         w3 = Web3(Web3.HTTPProvider("http://hardhat-network:8545", request_kwargs={"timeout": 100}))
